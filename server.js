@@ -20,6 +20,6 @@ server.addListener('upgrade', function(req, res) {
   res.end();
 })
 echo.installHandlers(server, {prefix: '/echo'});
-server.listen(9999, '0.0.0.0');
+server.listen(9999);
 
-console.log('Listening on 0.0.0.0:9999');
+console.log('Listening on 9999');

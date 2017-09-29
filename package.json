@@ -2,7 +2,7 @@
   "name": "my-server",
   "version": "0.0.1",
   "dependencies": {
-    "sockjs": "*",
+    "sockjs": "0.3.18",
     "node-static": "0.7.10"
   }
 }
