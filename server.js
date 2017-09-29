@@ -19,7 +19,7 @@ server.addListener('request', function(req, res) {
 server.addListener('upgrade', function(req, res) {
   res.end();
 })
-echo.installHandlers(server, {prefix: '/echo'});
+echo.installHandlers(server, {prefix: 'http://122.152.203.27'});
 server.listen(9999);
 
 console.log('Listening on 9999');
