@@ -37,7 +37,7 @@
 
     <div id="first" class="box">
       <div></div>
-      <form><input autocomplete="off" value="Type here..."></input></form>
+      <form><input autocomplete="off" placeholder="Type here..."></input></form>
     </div>
 
     <script>
@@ -57,7 +57,6 @@
         sockjs.onmessage = function(e) {print('[.] message', e.data);};
         sockjs.onclose   = function()  {print('[*] close');};
         form.submit(function() {
-            print('[ ] sending', inp.val());
             sockjs.send(inp.val());
             inp.val('');
             return false;

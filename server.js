@@ -19,11 +19,9 @@ var static_directory = new node_static.Server(__dirname);
 
 var server = http.createServer();
 server.addListener('request', function(req, res) {
-  console.log('requesting');
   static_directory.serve(req, res);
 });
 server.addListener('upgrade', function(req, res) {
-  console.log('upgrade');
   res.end();
 })
 echo.installHandlers(server, {prefix: '/my-server'});
