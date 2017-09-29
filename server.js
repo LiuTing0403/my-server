@@ -2,10 +2,15 @@ var http = require('http');
 var sockjs = require('sockjs');
 var node_static = require('node-static');
 
+var connects = [];
+
 var echo = sockjs.createServer({sockjs_url: 'http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js'});
 echo.on('connection', function(conn) {
+  connects.push(conn);
   conn.on('data', function(message) {
-    conn.write(message);
+    connects.forEach(function(c) {
+      c.write(message);
+    })
   });
   conn.on('close', function() {});
 });
