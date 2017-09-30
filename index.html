@@ -13,7 +13,6 @@
       }
       .box {
           width: 100%;
-          margin: 0 20px 0 20px;
       }
       .box input, .input-name input{
           border: 1px solid #eee;
@@ -21,14 +20,14 @@
           border-radius: 4px;
           width: 100%;
           padding: 0px;
-          margin: 5px;
+          margin-top: 20px;
       }
       .message-container {
           height: 300px;
           overflow: auto;
           width: 100%;
           padding: 5px;
-          margin: 5px;
+          box-sizing: border-box;
           border: 1px solid #eee;
           border-radius: 4px;
       }
@@ -38,6 +37,7 @@
       .box input {
           height: 30px;
           padding: 0 5px;
+          box-sizing: border-box;
       }
       .input-name {
           position: fixed;
@@ -45,10 +45,11 @@
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
+          background: #fff;
       }
       .input-name form {
-          width: 300px;
+          max-width: 300px;
+          width: 100%;
           margin: 400px auto;
       }
       .input-name input {
@@ -56,7 +57,6 @@
           padding: 0 5px;
       }
       h1 {
-          margin-left: 30px;
           text-align: center;
       }
       body {
@@ -86,7 +86,8 @@
             var chatForm = $('#chat form');
             var print = function(m, p) {
                 p = (p === undefined) ? '' : p;
-                div.append($("<div class=\"message\">").text(m + ' ' + p));
+                div.append($("<code>").text(m + ' ' + p));
+                div.append($("<br/>"));
                 div.scrollTop(div.scrollTop()+10000);
             };
             socket.on('chat message', function(msg)  {print('[' + msg.name + ']', msg.val);});
