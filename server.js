@@ -1,30 +1,22 @@
-var http = require('http');
-var sockjs = require('sockjs');
-var node_static = require('node-static');
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-var connects = [];
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
 
-var echo = sockjs.createServer({sockjs_url: 'http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js'});
-echo.on('connection', function(conn) {
-  connects.push(conn);
-  conn.on('data', function(message) {
-    connects.forEach(function(c) {
-      c.write(message);
-    })
+http.listen(8888, function() {
+  console.log('listening on 8888');
+});
+
+io.on('connection', function(socket) {
+  console.log('a user connected');
+  socket.on('disconnect', function(e) {
+    console.log('a user disconnect');
   });
-  conn.on('close', function() {});
+  socket.on('chat message', function(msg) {
+    console.log('get message', msg);
+    io.emit('chat message', msg);
+  })
 });
-console.log(__dirname)
-var static_directory = new node_static.Server(__dirname);
-
-var server = http.createServer();
-server.addListener('request', function(req, res) {
-  static_directory.serve(req, res);
-});
-server.addListener('upgrade', function(req, res) {
-  res.end();
-})
-echo.installHandlers(server, {prefix: '/my-server'});
-server.listen(9999);
-
-console.log('Listening on 9999');

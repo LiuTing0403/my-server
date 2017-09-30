@@ -1,7 +1,7 @@
 <!doctype html>
 <html><head>
-  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <style>
       .box {
           width: 300px;
@@ -33,7 +33,7 @@
       }
     </style>
 </head><body lang="en">
-    <h1>SockJS Echo example</h1>
+    <h1>Let's Chat</h1>
 
     <div id="first" class="box">
       <div></div>
@@ -41,26 +41,24 @@
     </div>
 
     <script>
-        var sockjs_url = 'http://122.152.203.27:9999/my-server';
-        var sockjs = new SockJS(sockjs_url);
-        $('#first input').focus();
-        var div  = $('#first div');
-        var inp  = $('#first input');
-        var form = $('#first form');
-        var print = function(m, p) {
-            p = (p === undefined) ? '' : JSON.stringify(p);
-            div.append($("<code>").text(m + ' ' + p));
-            div.append($("<br>"));
-            div.scrollTop(div.scrollTop()+10000);
-        };
-        sockjs.onopen    = function()  {print('[*] open', sockjs.protocol);};
-        sockjs.onmessage = function(e) {print('[.] message', e.data);};
-        sockjs.onclose   = function()  {print('[*] close');};
-        form.submit(function() {
-            sockjs.send(inp.val());
-            inp.val('');
-            return false;
-        });
+        $(function() {
+            var socket = io();
+            var div  = $('#first div');
+            var inp  = $('#first input');
+            var form = $('#first form');
+            var print = function(m, p) {
+                p = (p === undefined) ? '' : p;
+                div.append($("<code>").text(m + ' ' + p));
+                div.append($("<br>"));
+                div.scrollTop(div.scrollTop()+10000);
+            };
+            socket.on('chat message', function(msg)  {print('[.]', msg);});
+            form.submit(function() {
+                socket.emit('chat message', inp.val());
+                inp.val('');
+                return false;
+            });
+        })
     </script>
 </body>
 </html>
