@@ -8,7 +8,7 @@
           float: left;
           margin: 0 20px 0 20px;
       }
-      .box div, .box input {
+      .box div, .box input, .input-name input{
           border: 1px solid;
           -moz-border-radius: 4px;
           border-radius: 4px;
@@ -23,6 +23,23 @@
       }
       .box input {
           height: 30px;
+          padding: 0 5px;
+      }
+      .input-name {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+      }
+      .input-name form {
+          width: 300px;
+          margin: 400px auto;
+      }
+      .input-name input {
+          height: 30px;
+          padding: 0 5px;
       }
       h1 {
           margin-left: 30px;
@@ -34,7 +51,9 @@
     </style>
 </head><body lang="en">
     <h1>Let's Chat</h1>
-
+    <div class="input-name">
+      <form id="nickname-input"><input autocomplete="off" placeholder="Please input your nickname"></input></form>
+    </div>
     <div id="first" class="box">
       <div></div>
       <form><input autocomplete="off" placeholder="Type here..."></input></form>
@@ -43,18 +62,27 @@
     <script>
         $(function() {
             var socket = io();
+            var nickname;
             var div  = $('#first div');
             var inp  = $('#first input');
-            var form = $('#first form');
+            var nicknameForm = $('#nickname-input');
+            var nicknameInput = $('#nickname-input input');
+            var chatForm = $('#first form');
             var print = function(m, p) {
                 p = (p === undefined) ? '' : p;
                 div.append($("<code>").text(m + ' ' + p));
                 div.append($("<br>"));
                 div.scrollTop(div.scrollTop()+10000);
             };
-            socket.on('chat message', function(msg)  {print('[.]', msg);});
-            form.submit(function() {
-                socket.emit('chat message', inp.val());
+            socket.on('chat message', function(msg)  {print('[' + msg.name + ']', msg.val);});
+            nicknameForm.submit(function() {
+                nickname = nicknameInput.val();
+                nicknameInput.val('');
+                $('.input-name').hide();
+                return false;
+            });
+            chatForm.submit(function() {
+                socket.emit('chat message', {name: nickname, val: inp.val()});
                 inp.val('');
                 return false;
             });
